@@ -1,0 +1,10 @@
+#!/bin/bash
+
+APP_URL="http://localhost:3000"
+STATUS=$(curl -o /dev/null -s -w "%{http_code}\n" $APP_URL)
+
+if [ "$STATUS" == "200" ]; then
+  echo "Application is UP"
+else
+  echo "Application is DOWN (Status Code: $STATUS)"
+fi

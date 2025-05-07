@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Thresholds
+CPU_THRESHOLD=80
+MEM_THRESHOLD=80
+DISK_THRESHOLD=80
+
+# CPU Usage
+CPU_USAGE=$(top -bn1 | grep "Cpu(s)" | awk '{print $2 + $4}')
+CPU_INT=${CPU_USAGE%.*}
+
+# Memory Usage
+MEM_USAGE=$(free | grep Mem | awk '{print $3/$2 * 100.0}')
+MEM_INT=${MEM_USAGE%.*}
+
+# Disk Usage
+DISK_USAGE=$(df / | grep / | awk '{print $5}' | sed 's/%//g')
+
+echo "CPU Usage: $CPU_USAGE%"
+echo "Memory Usage: $MEM_USAGE%"
+echo "Disk Usage: $DISK_USAGE%"
+
+if [ "$CPU_INT" -gt "$CPU_THRESHOLD" ]; then
+  echo "ALERT: CPU usage is above $CPU_THRESHOLD%" >> system_alerts.log
+fi
+
+if [ "$MEM_INT" -gt "$MEM_THRESHOLD" ]; then
+  echo "ALERT: Memory usage is above $MEM_THRESHOLD%" >> system_alerts.log
+fi
+
+if [ "$DISK_USAGE" -gt "$DISK_THRESHOLD" ]; then
+  echo "ALERT: Disk usage is above $DISK_THRESHOLD%" >> system_alerts.log
+fi
