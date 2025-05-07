@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wisecow-cert
+  namespace: default
+spec:
+  secretName: wisecow-tls
+  duration: 8760h # 1 year
+  renewBefore: 360h # 15 days
+  subject:
+    organizations:
+      - Wisecow
+  commonName: wisecow.local
+  dnsNames:
+    - wisecow.local
+  issuerRef:
+    name: selfsigned-issuer
+    kind: ClusterIssuer
